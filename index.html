@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Todo</title>
+</head>
+
+<body>
+    <div id="app">
+        <h1>Todo APP</h1>
+        <!-- 입력받는 input-->
+        <!-- 엔터 이벤트 추가-->
+        <input type="text" v-model="inputText"
+         v-on:keyup.enter="addItem">
+        <button v-on:click="fetchItems">add</button>
+        <div>
+            <ul>
+                <li v-for="(todoItem, index) in todoItems">
+                    {{todoItem}}
+                    <button v-on:click="removeItem(todoItem,index)">remove</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        new Vue({
+            //인스턴스가 생성됬을떄 함수 동작 
+            created:function(){
+                this.fetchItems();
+            },
+            el: '#app',
+            data: {
+                //inputbox에 들어갈 데이터
+                //v-가들어가는것은 vue에서 관리하는 속성
+
+                inputText: '',
+                todoItems:[]
+            },
+            methods: {
+                addItem: function (event) {
+                    //속성에 함수를 연결함
+                    //13은엔터 
+                    //if (event.keyCode === 13) {
+                        console.log(event);
+                        var value = this.inputText;
+                        localStorage.setItem(value, value);
+                        this.todoItems.push(value);
+                        this.inputText = '';
+                       
+                    //}
+                    // $.ajax({
+                    //     type:'POST'
+                    // })
+                    // axios.post('주소',this.inputText)
+
+                },
+                fetchItems:function(){
+                    //axios.get('/todos')
+                    for(var i =0; i< localStorage.length;i++){
+                       var value= localStorage.key(i);
+                       console.log(value);
+                       console.log(this);
+                       this.todoItems.push(value)
+                       
+                    }
+                },
+                removeItem:function(todoItem,index){
+                    console.log(todoItem,index);
+                    this.todoItems.splice(index,1);
+                    localStorage.removeItem(todoItem)
+                    //axios.delete()
+                }
+            }
+        });
+
+    </script>
+
+
+</body>
+
+</html>
